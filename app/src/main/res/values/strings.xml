@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Insights</string>
+    <string name="carousel_image_1_description">Description 1</string>
+    <string name="carousel_image_2_description">description 2</string>
+    <string name="carousel_image_3_description">description 3</string>
+    <string name="carousel_image_4_description">description 4</string>
+    <string name="carousel_image_5_description">description 5</string>
 </resources>
