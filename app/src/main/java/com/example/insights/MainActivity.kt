@@ -1,5 +1,12 @@
 package com.example.insights
 
+import androidx.compose.material3.*
+import android.content.Intent
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.*
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,7 +19,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -24,13 +30,38 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,52 +76,85 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val coroutineScope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState(false)
-    var showBottomSheet by remember { mutableStateOf(false) }
-
-    // This block handles the state of the bottom sheet
-    LaunchedEffect(showBottomSheet) {
-        if (showBottomSheet) {
-            sheetState.show()
-        } else {
-            sheetState.hide()
-        }
-    }
+    var showProductBottomSheet by remember { mutableStateOf(false) }
+    var showSettingsBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
             when (currentRoute) {
-                "Home" -> HomeTopAppBar { showBottomSheet = true }
+                "Home" -> HomeTopAppBar { showSettingsBottomSheet = true }
                 "Insights" -> InsightsTopAppBar(navController)
-                "Investments" -> InvestmentsTopAppBar(navController)
+                "Investments/{selectedProduct}" -> InvestmentsTopAppBar(navController)
             }
         },
         bottomBar = {
-            NavigationBar(navController)
+            NavigationBar(navController) {
+                showProductBottomSheet = true
+            }
         },
         content = { innerPadding ->
             Box(modifier = Modifier.padding(innerPadding)) {
-                NavigationHost(navController)
+                NavigationHost(navController, showProductBottomSheet)
             }
         }
     )
 
-    // BottomSheet content
-    if (showBottomSheet) {
+    // Custom BottomSheet for product selection (3/4 height, non-expandable)
+    if (showProductBottomSheet) {
+        CustomBottomSheet(
+            onDismiss = { showProductBottomSheet = false },
+            content = {
+                ProductSelectionSheet(
+                    navController = navController, // Pass navController for navigation
+                    onProductSelected = { selectedProduct ->
+                        // Close the sheet
+                        showProductBottomSheet = false
+
+                        // Perform navigation to the Investments screen, passing the selected product
+                        navController.navigate("Investments/$selectedProduct")
+                    }
+                )
+            }
+        )
+    }
+
+    // ModalBottomSheet for settings
+    if (showSettingsBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            sheetState = sheetState
+            onDismissRequest = { showSettingsBottomSheet = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ) {
-            SettingsBottomSheetContent(onDismiss = { showBottomSheet = false })
+            SettingsBottomSheetContent(onDismiss = { showSettingsBottomSheet = false })
         }
     }
 }
+
+@Composable
+fun CustomBottomSheet(onDismiss: () -> Unit, content: @Composable () -> Unit) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val sheetHeight = screenHeight * 0.75f // 3/4 of the screen height
+
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(sheetHeight) // Set the custom height for the bottom sheet
+                .background(Color.White, RoundedCornerShape(16.dp)) // Rounded on all corners
+                .padding(16.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            content()
+        }
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsightsTopAppBar(navController: NavHostController) {
@@ -107,8 +171,8 @@ fun InsightsTopAppBar(navController: NavHostController) {
         }
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvestmentsTopAppBar(navController: NavHostController) {
     TopAppBar(
@@ -124,67 +188,79 @@ fun InvestmentsTopAppBar(navController: NavHostController) {
         }
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(onSettingsClick: () -> Unit) {
     TopAppBar(
         title = {
-            // Center the logo
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize(Alignment.Center)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_logo), // Use the JP Morgan logo here
+                    painter = painterResource(id = R.drawable.ic_logo),
                     contentDescription = "JP Morgan logo",
                     modifier = Modifier.size(96.dp, 32.dp)
                 )
             }
         },
         navigationIcon = {
-            // Add a transparent IconButton to balance the space
             IconButton(onClick = {}, modifier = Modifier.size(48.dp)) {
-                Spacer(modifier = Modifier.size(24.dp)) // Invisible content
+                Spacer(modifier = Modifier.size(24.dp))
             }
         },
         actions = {
             IconButton(onClick = { onSettingsClick() }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
+                    modifier = Modifier.size(16.dp),
                     contentDescription = "Settings",
-                    tint = Color.Black
+                    tint = Color.Gray
                 )
             }
         }
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationBar(navController: NavHostController) {
+fun NavigationBar(navController: NavHostController, onInvestmentsClick: () -> Unit) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val items = listOf(
         NavigationItem("Home", Icons.Filled.Home),
-        NavigationItem("Insights", Icons.Filled.Home),
-        NavigationItem("Investments", Icons.Filled.Home)
+        NavigationItem("Insights", Icons.Filled.Check),
+        NavigationItem("Investments", Icons.Filled.ShoppingCart)
     )
     NavigationBar {
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = item.title) },
                 label = { Text(item.title) },
-                selected = currentRoute == item.title,
+                selected = currentRoute?.startsWith(item.title) == true, // Ensure correct selection
                 onClick = {
-                    navController.navigate(item.title) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                    if (item.title == "Home") {
+                        navController.navigate("Home") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = false // This ensures it goes back to Home
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    } else if (item.title == "Investments") {
+                        onInvestmentsClick() // Show the product selection bottom sheet
+                    } else {
+                        navController.navigate(item.title) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue, // Change the color when selected
+                    selectedIconColor = Color.Blue,
                     selectedTextColor = Color.Blue,
                     unselectedIconColor = Color.Gray,
                     unselectedTextColor = Color.Gray
@@ -195,73 +271,22 @@ fun NavigationBar(navController: NavHostController) {
 }
 
 data class NavigationItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
-@OptIn(ExperimentalMaterial3Api::class)
+
+
 @Composable
-fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun NavigationHost(navController: NavHostController, showProductBottomSheet: Boolean, modifier: Modifier = Modifier) {
     NavHost(navController, startDestination = "Home", modifier = modifier) {
-        composable("Home") { HomeScreen() }
-        composable("Insights") { InsightsScreen() }
-        composable("Investments") { InvestmentsScreen() }
-    }
-}
-@OptIn(ExperimentalMaterial3Api::class)
-
-data class CarouselItem(
-    val id: Int,
-    @DrawableRes val imageResId: Int,
-    @StringRes val contentDescriptionResId: Int
-)
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeScreen() {
-    val carouselItems = listOf(
-        CarouselItem(0, R.drawable.skyline, R.string.carousel_image_1_description),
-        CarouselItem(1, R.drawable.skyline, R.string.carousel_image_2_description),
-        CarouselItem(2, R.drawable.skyline, R.string.carousel_image_3_description),
-        CarouselItem(3, R.drawable.skyline, R.string.carousel_image_4_description),
-        CarouselItem(4, R.drawable.skyline, R.string.carousel_image_5_description)
-    )
-
-    val carouselState = rememberCarouselState { carouselItems.count() }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top // Adjusted to accommodate the carousel at the top
-    ) {
-        HorizontalMultiBrowseCarousel(
-            state = carouselState,
-            modifier = Modifier
-                .width(412.dp)
-                .height(221.dp),
-            preferredItemWidth = 186.dp,
-            itemSpacing = 8.dp,
-            contentPadding = PaddingValues(horizontal = 16.dp)
-        ) { i ->
-            val item = carouselItems[i]
-            Image(
-                modifier = Modifier
-                    .height(205.dp)
-                    .clip(MaterialTheme.shapes.extraLarge)
-                    .fillMaxWidth(),
-                painter = painterResource(id = item.imageResId),
-                contentDescription = stringResource(item.contentDescriptionResId),
-                contentScale = ContentScale.Crop
-            )
+        composable("Home") { HomeScreen(navController) }
+        composable("Insights") { InsightsScreen(navController) }
+        composable("Investments/{selectedProduct}") { backStackEntry ->
+            val selectedProduct = backStackEntry.arguments?.getString("selectedProduct")
+            InvestmentsScreen(navController, selectedProduct)
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "Home Screen", style = MaterialTheme.typography.titleLarge)
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InsightsScreen() {
+fun InsightsScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -272,20 +297,66 @@ fun InsightsScreen() {
         Text(text = "Insights Screen", style = MaterialTheme.typography.titleLarge)
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun InvestmentsScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Investments Screen", style = MaterialTheme.typography.titleLarge)
+fun InvestmentsScreen(navController: NavHostController, selectedProduct: String?) {
+    // Define the base URL for the investments site
+    val baseUrl = "https://am.jpmorgan.com/us/en/asset-management/adv/products/fund-explorer"
+
+    // Update the URL based on the selected product type
+    val url = when (selectedProduct) {
+        "Mutual Funds" -> "$baseUrl/mutual-fund?Source=MI"
+        "ETFs" -> "$baseUrl/etf?Source=MI"
+        "Money Market Funds" -> "$baseUrl/money-market?Source=MI"
+        "529 Portfolios" -> "$baseUrl/529?Source=MI"
+        "Alternatives" -> "$baseUrl/alternatives?Source=MI"
+        "SmartRetirement© Funds" -> "$baseUrl/smart-retirement?Source=MI"
+        "Separately Managed Accounts" -> "$baseUrl/sma?Source=MI"
+        "Commingled Funds" -> "$baseUrl/commingled-fund?Source=MI"
+        else -> "$baseUrl/mutual-fund?Source=MI" // Default URL if no product is selected
+    }
+
+    // Display the WebView with the correct URL
+    InvestmentsWebviewScreen(url = url)
+}
+
+@Composable
+fun ProductSelectionSheet(navController: NavHostController, onProductSelected: (String) -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = "Select your product type",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(8.dp)
+        )
+
+        // List of product types
+        val productTypes = listOf(
+            "Mutual Funds",
+            "ETFs",
+            "Money Market Funds",
+            "529 Portfolios",
+            "Alternatives",
+            "SmartRetirement© Funds",
+            "Separately Managed Accounts",
+            "Commingled Funds"
+        )
+
+        // Display product types as clickable text
+        productTypes.forEach { productType ->
+            Text(
+                text = productType,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onProductSelected(productType) // Trigger navigation after selection
+                    }
+                    .padding(8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SettingsBottomSheetContent(onDismiss: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {

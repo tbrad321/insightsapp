@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Insights</string>
-    <string name="carousel_image_1_description">Description 1</string>
-    <string name="carousel_image_2_description">description 2</string>
-    <string name="carousel_image_3_description">description 3</string>
-    <string name="carousel_image_4_description">description 4</string>
-    <string name="carousel_image_5_description">description 5</string>
+    <string name="carousel_image_1_description">Four Banks and the Dollar</string>
+    <string name="carousel_image_2_description">Will China’s stimulus move the needle this time?</string>
+    <string name="carousel_image_3_description">Will U.S. port worker strikes negatively impact the economic outlook?</string>
+    <string name="carousel_image_4_description">Guide to the Markets</string>
+    <string name="carousel_image_5_description">What is behind the rally in utility stocks?</string>
+    <string name="article_title_1">Four Banks and the Dollar</string>
+    <string name="article_title_2">Will China’s stimulus move the needle this time?</string>
+    <string name="article_title_3">Will U.S. port worker strikes negatively impact the economic outlook?</string>
+    <string name="article_title_4">Guide to the Markets</string>
+    <string name="article_title_5">What is behind the rally in utility stocks? hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?</string>
 </resources>

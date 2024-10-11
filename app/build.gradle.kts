@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.junit)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.vision.internal.vkp)
+    implementation(libs.material)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
