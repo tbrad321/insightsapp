@@ -278,6 +278,13 @@ fun NavigationHost(navController: NavHostController, showProductBottomSheet: Boo
     NavHost(navController, startDestination = "Home", modifier = modifier) {
         composable("Home") { HomeScreen(navController) }
         composable("Insights") { InsightsScreen(navController) }
+
+        // Sub-pages of the Insights screen
+        composable("Insights/Market") { MarketInsightsScreen(navController) }
+        composable("Insights/Portfolio") { PortfolioInsightsScreen(navController) }
+        composable("Insights/Retirement") { RetirementInsightsScreen(navController) }
+        composable("Insights/Etf") { EtfInsightsScreen(navController) }
+
         composable("Investments/{selectedProduct}") { backStackEntry ->
             val selectedProduct = backStackEntry.arguments?.getString("selectedProduct")
             InvestmentsScreen(navController, selectedProduct)

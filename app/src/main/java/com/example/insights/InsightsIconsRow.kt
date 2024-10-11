@@ -2,6 +2,7 @@ package com.example.insights
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,62 +32,70 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+
 
 // InsightsIconsRow.kt
 @Composable
-fun LatestInsightsBox() {
+fun LatestInsightsBox(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp) // Outer padding around the box
-            .shadow(0.dp, shape = RoundedCornerShape(8.dp)) // Apply shadow for elevation
-            .background(Color.LightGray, shape = RoundedCornerShape(8.dp)) // Light gray background with rounded corners
-            .padding(16.dp) // Inner padding for content inside the box
+            .padding(16.dp)
+            .shadow(0.dp, shape = RoundedCornerShape(8.dp))
+            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+            .padding(16.dp)
     ) {
         Column {
-            // Header
             Text(
                 text = "Latest Insights",
-                style = MaterialTheme.typography.headlineSmall, // Use headlineSmall in place of h6
-                modifier = Modifier.padding(bottom = 16.dp) // Padding between header and buttons
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
-            // The row containing all four buttons
-            InsightsIconsRow()
+            InsightsIconsRow(navController = navController)  // Pass navController here
         }
     }
 }
 
 @Composable
-fun InsightsIconsRow() {
+fun InsightsIconsRow(navController: NavHostController) {
     val insightsList = listOf(
         InsightItem("Market", Color.Blue),
         InsightItem("Portfolio", Color.Green),
         InsightItem("Retirement", Color.Yellow),
-        InsightItem("ETF", Color(0xFFFFA500)) // Example orange color
+        InsightItem("ETF", Color(0xFFFFA500))
     )
 
-    // Row for holding the insights
     Row(
         modifier = Modifier
-            .fillMaxWidth() // Take up the full width of the screen
-            .padding(horizontal = 0.dp), // Reduce horizontal padding to use more space on the sides
-        horizontalArrangement = Arrangement.spacedBy(4.dp) //
+            .fillMaxWidth()
+            .padding(horizontal = 0.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         insightsList.forEach { item ->
             InsightIconItem(
                 item = item,
-                modifier = Modifier.weight(1f) // Each item takes 1/4 of the available space
+                navController = navController,  // Pass navController here
+                modifier = Modifier.weight(1f)
             )
         }
     }
 }
 
 @Composable
-fun InsightIconItem(item: InsightItem, modifier: Modifier = Modifier) {
+fun InsightIconItem(item: InsightItem, navController: NavHostController, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .padding(4.dp) // Reduced padding around each item to use more space
-            .wrapContentSize(),
+            .padding(4.dp)
+            .wrapContentSize()
+            .clickable {
+                when (item.label) {
+                    "Market" -> navController.navigate("Insights/Market")
+                    "Portfolio" -> navController.navigate("Insights/Portfolio")
+                    "Retirement" -> navController.navigate("Insights/Retirement")
+                    "ETF" -> navController.navigate("Insights/Etf")
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -99,22 +108,22 @@ fun InsightIconItem(item: InsightItem, modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowForward, // Replace with custom vector if needed
+                imageVector = Icons.Default.ArrowForward,
                 contentDescription = null,
-                tint = Color.White, // Icon color
-                modifier = Modifier.fillMaxSize(0.5f) // Icon takes 50% of the Box size
+                tint = Color.White,
+                modifier = Modifier.fillMaxSize(0.5f)
             )
         }
-        Spacer(modifier = Modifier.height(4.dp)) // Space between the icon and text
+        Spacer(modifier = Modifier.height(4.dp))
 
         // Text label below the icon
         Text(
             text = item.label,
             style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center, // Center align the text
-            maxLines = 2, // Allow text to wrap to 2 lines
-            modifier = Modifier.fillMaxWidth(), // Let text take the full width of its container
-            overflow = TextOverflow.Ellipsis // Handle text overflow
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            modifier = Modifier.fillMaxWidth(),
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

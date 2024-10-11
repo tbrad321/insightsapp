@@ -143,6 +143,6 @@ fun HomeScreen(navController: NavHostController) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        LatestInsightsBox()
+        LatestInsightsBox(navController = navController)
     }
 }
