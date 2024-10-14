@@ -294,6 +294,7 @@ fun NavigationHost(navController: NavHostController, showProductBottomSheet: Boo
 
 @Composable
 fun InsightsScreen(navController: NavHostController) {
+    LatestInsightsBox(navController)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -302,6 +303,7 @@ fun InsightsScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Insights Screen", style = MaterialTheme.typography.titleLarge)
+
     }
 }
 
@@ -369,7 +371,6 @@ fun SettingsBottomSheetContent(onDismiss: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = "Region Settings",
-            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(8.dp)
                 .clickable { onDismiss() }

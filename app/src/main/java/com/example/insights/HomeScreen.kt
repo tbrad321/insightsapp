@@ -3,7 +3,6 @@ package com.example.insights
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,8 +23,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,21 +34,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.ui.unit.Density
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.animation.core.FloatExponentialDecaySpec
-import androidx.compose.animation.core.animateDecay
-import androidx.compose.animation.core.exponentialDecay
-import androidx.compose.foundation.gestures.ScrollScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 
 data class CarouselItem(
@@ -65,11 +48,11 @@ data class CarouselItem(
 fun HomeScreen(navController: NavHostController) {
     // Carousel items
     val carouselItems = listOf(
-        CarouselItem(0, R.drawable.skyline, R.string.carousel_image_1_description, stringResource(R.string.article_title_1)),
-        CarouselItem(1, R.drawable.skyline, R.string.carousel_image_2_description, stringResource(R.string.article_title_2)),
-        CarouselItem(2, R.drawable.skyline, R.string.carousel_image_3_description, stringResource(R.string.article_title_3)),
-        CarouselItem(3, R.drawable.skyline, R.string.carousel_image_4_description, stringResource(R.string.article_title_4)),
-        CarouselItem(4, R.drawable.skyline, R.string.carousel_image_5_description, stringResource(R.string.article_title_5))
+        CarouselItem(0, R.drawable.home_carousel_image_1, R.string.carousel_image_1_description, stringResource(R.string.article_title_1)),
+        CarouselItem(1, R.drawable.home_carousel_image_2, R.string.carousel_image_2_description, stringResource(R.string.article_title_2)),
+        CarouselItem(2, R.drawable.home_carousel_image_3, R.string.carousel_image_3_description, stringResource(R.string.article_title_3)),
+        CarouselItem(3, R.drawable.home_carousel_image_4, R.string.carousel_image_4_description, stringResource(R.string.article_title_4)),
+        CarouselItem(4, R.drawable.home_carousel_image_5, R.string.carousel_image_5_description, stringResource(R.string.article_title_5))
     )
 
     // LazyRow scroll state
