@@ -1,8 +1,9 @@
 package com.example.insights
 
-import androidx.annotation.DrawableRes
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,20 +40,21 @@ import androidx.compose.runtime.Composable
 
 data class CarouselItem(
     val id: Int,
-    @DrawableRes val imageResId: Int,
+    val imageUrl: String,
     @StringRes val contentDescriptionResId: Int,
-    val title: String // Title text for each article card
+    val title: String, // Title text for each article card
+    val articleUrl: String
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
     // Carousel items
     val carouselItems = listOf(
-        CarouselItem(0, R.drawable.home_carousel_image_1, R.string.carousel_image_1_description, stringResource(R.string.article_title_1)),
-        CarouselItem(1, R.drawable.home_carousel_image_2, R.string.carousel_image_2_description, stringResource(R.string.article_title_2)),
-        CarouselItem(2, R.drawable.home_carousel_image_3, R.string.carousel_image_3_description, stringResource(R.string.article_title_3)),
-        CarouselItem(3, R.drawable.home_carousel_image_4, R.string.carousel_image_4_description, stringResource(R.string.article_title_4)),
-        CarouselItem(4, R.drawable.home_carousel_image_5, R.string.carousel_image_5_description, stringResource(R.string.article_title_5))
+        CarouselItem(0, stringResource(R.string.home_carousel_image_1_url), R.string.home_carousel_image_1_description, stringResource(R.string.home_carousel_article_title_1), stringResource(R.string.home_carousel_article_url_1)),
+        CarouselItem(1, stringResource(R.string.home_carousel_image_2_url), R.string.home_carousel_image_2_description, stringResource(R.string.home_carousel_article_title_2), stringResource(R.string.home_carousel_article_url_2)),
+        CarouselItem(2, stringResource(R.string.home_carousel_image_3_url), R.string.home_carousel_image_3_description, stringResource(R.string.home_carousel_article_title_3), stringResource(R.string.home_carousel_article_url_3)),
+        CarouselItem(3, stringResource(R.string.home_carousel_image_4_url), R.string.home_carousel_image_4_description, stringResource(R.string.home_carousel_article_title_4), stringResource(R.string.home_carousel_article_url_4)),
+        CarouselItem(4, stringResource(R.string.home_carousel_image_5_url), R.string.home_carousel_image_5_description, stringResource(R.string.home_carousel_article_title_5), stringResource(R.string.home_carousel_article_url_5))
     )
 
     // LazyRow scroll state
@@ -91,15 +93,20 @@ fun HomeScreen(navController: NavHostController) {
             LazyRow(
                 state = listState,
                 flingBehavior = snapFlingBehavior,
-                contentPadding = PaddingValues(16.dp), // No extra padding for the LazyRow
-                horizontalArrangement = Arrangement.spacedBy(16.dp) // Space between items
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 itemsIndexed(carouselItems) { index, item ->
                     ArticleCard(
-                        imageResId = item.imageResId,
+                        imageUrl = item.imageUrl,
                         title = item.title,
                         modifier = Modifier
-                            .width(300.dp) // Width of each card
+                            .width(300.dp)
+                            .clickable {
+                                // Encode the URL before navigating
+                                val encodedUrl = Uri.encode(item.articleUrl)
+                                navController.navigate("article_webview/$encodedUrl")
+                            }
                     )
                 }
             }

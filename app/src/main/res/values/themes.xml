@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Insights" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="body_2_strong">
+        <item name="android:fontFamily">@font/jpmampromed_family</item>
+        <item name="android:textSize">14sp</item> <!-- Equivalent to 14px -->
+        <item name="android:lineHeight">22sp</item> <!-- Equivalent to 22px -->
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>

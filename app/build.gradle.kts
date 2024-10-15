@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.vision.internal.vkp)
     implementation(libs.material)
+    implementation(libs.androidx.tools.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
@@ -78,6 +79,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+    implementation("io.coil-kt:coil-compose:2.2.2")
   }
 
 

@@ -1,13 +1,23 @@
 <resources>
     <string name="app_name">Insights</string>
-    <string name="carousel_image_1_description">Four Banks and the Dollar</string>
-    <string name="carousel_image_2_description">Will China’s stimulus move the needle this time?</string>
-    <string name="carousel_image_3_description">Will U.S. port worker strikes negatively impact the economic outlook?</string>
-    <string name="carousel_image_4_description">Guide to the Markets</string>
-    <string name="carousel_image_5_description">What is behind the rally in utility stocks?</string>
-    <string name="article_title_1">Four Banks and the Dollar</string>
-    <string name="article_title_2">Will China’s stimulus move the needle this time?</string>
-    <string name="article_title_3">Will U.S. port worker strikes negatively impact the economic outlook?</string>
-    <string name="article_title_4">Guide to the Markets</string>
-    <string name="article_title_5">What is behind the rally in utility stocks? hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?hat is behind the rally in utility stocks?</string>
+    <string name="home_carousel_image_1_description">Four Banks and the Dollar</string>
+    <string name="home_carousel_image_2_description">Will China’s stimulus move the needle this time?</string>
+    <string name="home_carousel_image_3_description">Will U.S. port worker strikes negatively impact the economic outlook?</string>
+    <string name="home_carousel_image_4_description">Guide to the Markets</string>
+    <string name="home_carousel_image_5_description">What is behind the rally in utility stocks?</string>
+    <string name="home_carousel_article_title_1">Four Banks and the Dollar</string>
+    <string name="home_carousel_article_title_2">Will China’s stimulus move the needle this time?</string>
+    <string name="home_carousel_article_title_3">Will U.S. port worker strikes negatively impact the economic outlook?</string>
+    <string name="home_carousel_article_title_4">What is behind the rally in utility stocks?</string>
+    <string name="home_carousel_article_title_5">Guide to the Markets</string>
+    <string name="home_carousel_image_1_url">https://cdn.jpmorganfunds.com/content/dam/jpm-am-aem/global/en/GettyImages-1405131129.png</string>
+    <string name="home_carousel_image_2_url">https://cdn.jpmorganfunds.com/content/dam/jpm-am-aem/global/en/GettyImages-1249185022%20(2).png</string>
+    <string name="home_carousel_image_3_url">https://cdn.jpmorganfunds.com/content/dam/jpm-am-aem/global/en/GettyImages-1399264228.png</string>
+    <string name="home_carousel_image_4_url">https://cdn.jpmorganfunds.com/content/dam/jpm-am-aem/global/en/GettyImages-1359425105.jpg</string>
+    <string name="home_carousel_image_5_url">https://cdn.jpmorganfunds.com/content/dam/jpm-am-aem/americas/us/en/insights/market-insights/MI_Chevron_01_Blue 1.jpg</string>
+    <string name="home_carousel_article_url_1">https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/notes-on-the-week-ahead/four-banks-and-the-dollar/?Source=MI</string>
+    <string name="home_carousel_article_url_2">https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/on-the-minds-of-investors/will-chinas-stimulus-move-the-needle-this-time/?Source=MI</string>
+    <string name="home_carousel_article_url_3">https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/on-the-minds-of-investors/will-us-port-worker-strikes-negatively-impact-the-economic-outlook/?Source=MI</string>
+    <string name="home_carousel_article_url_4">https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/on-the-minds-of-investors/what-is-behind-the-rally-in-utility-stocks/?Source=MI</string>
+    <string name="home_carousel_article_url_5">https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/guide-to-the-markets/?Source=MI</string>
 </resources>

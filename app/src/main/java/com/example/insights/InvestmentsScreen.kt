@@ -46,7 +46,7 @@ fun InvestmentsWebviewScreen(url: String) {
                         """
                         (function() {
                             var style = document.createElement('style');
-                            style.innerHTML = 'body { margin-top: -50px !important; }';
+                            style.innerHTML = 'body { margin-top: -65px !important; }';
                             document.head.appendChild(style);
                         })();
                         """.trimIndent(), null

@@ -2,6 +2,7 @@ package com.example.insights
 
 import androidx.compose.material3.*
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
@@ -62,6 +63,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.insights.ui.theme.Neutral0
+import com.example.insights.ui.theme.Neutral400
+import com.example.insights.ui.theme.Teal100
+import com.example.insights.ui.theme.Teal600
+import com.example.insights.ui.theme.Teal800
+import com.example.insights.ui.theme.body2Strong
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,39 +242,51 @@ fun NavigationBar(navController: NavHostController, onInvestmentsClick: () -> Un
         NavigationItem("Insights", Icons.Filled.Check),
         NavigationItem("Investments", Icons.Filled.ShoppingCart)
     )
-    NavigationBar {
-        items.forEach { item ->
-            NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = item.title) },
-                label = { Text(item.title) },
-                selected = currentRoute?.startsWith(item.title) == true, // Ensure correct selection
-                onClick = {
-                    if (item.title == "Home") {
-                        navController.navigate("Home") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = false // This ensures it goes back to Home
+
+    // Set the height to 86dp for the NavigationBar
+    Box(modifier = Modifier.height(86.dp)) {
+        NavigationBar(
+            containerColor = Neutral0 // Background color for the navigation bar
+        ) {
+            items.forEach { item ->
+                NavigationBarItem(
+                    icon = { Icon(item.icon, contentDescription = item.title) },
+                    label = { Text(item.title, style = body2Strong) },
+                    selected = when (item.title) {
+                        "Home" -> currentRoute == "Home"
+                        "Insights" -> currentRoute?.startsWith("Insights") == true || currentRoute?.startsWith("article_webview") == true
+                        "Investments" -> currentRoute?.startsWith("Investments") == true
+                        else -> false
+                    },
+                    onClick = {
+                        if (item.title == "Home") {
+                            navController.navigate("Home") {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
                             }
-                            launchSingleTop = true
-                        }
-                    } else if (item.title == "Investments") {
-                        onInvestmentsClick() // Show the product selection bottom sheet
-                    } else {
-                        navController.navigate(item.title) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                        } else if (item.title == "Investments") {
+                            onInvestmentsClick()
+                        } else {
+                            navController.navigate(item.title) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue,
-                    selectedTextColor = Color.Blue,
-                    unselectedIconColor = Color.Gray,
-                    unselectedTextColor = Color.Gray
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Teal600,
+                        selectedTextColor = Teal800,
+                        unselectedIconColor = Neutral400,
+                        unselectedTextColor = Neutral400,
+                        indicatorColor = Teal100 // Oval background for the selected item
+                    )
                 )
-            )
+            }
         }
     }
 }
@@ -277,6 +298,18 @@ data class NavigationItem(val title: String, val icon: androidx.compose.ui.graph
 fun NavigationHost(navController: NavHostController, showProductBottomSheet: Boolean, modifier: Modifier = Modifier) {
     NavHost(navController, startDestination = "Home", modifier = modifier) {
         composable("Home") { HomeScreen(navController) }
+
+        composable(
+            "article_webview/{articleUrl}",
+            arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encodedUrl = backStackEntry.arguments?.getString("articleUrl")
+            val articleUrl = Uri.decode(encodedUrl)
+            articleUrl?.let {
+                ArticleWebViewScreen(navController = navController, articleUrl = it)
+            }
+        }
+
         composable("Insights") { InsightsScreen(navController) }
 
         // Sub-pages of the Insights screen

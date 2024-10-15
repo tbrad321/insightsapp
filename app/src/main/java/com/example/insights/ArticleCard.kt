@@ -48,10 +48,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.launch
+import coil.compose.AsyncImage
+
 
 @Composable
 fun ArticleCard(
-    imageResId: Int,
+    imageUrl: String,
     title: String,
     modifier: Modifier = Modifier
 ) {
@@ -62,8 +64,9 @@ fun ArticleCard(
             .background(Color.White, shape = RoundedCornerShape(8.dp)) // Use background color for contrast
     ) {
         Box {
-            Image(
-                painter = painterResource(id = imageResId),
+            // Use Coil's AsyncImage to load the image from the URL
+            AsyncImage(
+                model = imageUrl,
                 contentDescription = title,
                 modifier = Modifier
                     .height(250.dp)
