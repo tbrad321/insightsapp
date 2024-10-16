@@ -78,7 +78,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
     implementation("io.coil-kt:coil-compose:2.2.2")
   }
 

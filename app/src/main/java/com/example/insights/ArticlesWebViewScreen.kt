@@ -63,6 +63,8 @@ import androidx.privacysandbox.tools.core.model.Type
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.LocalContext
 
@@ -171,18 +173,20 @@ fun ArticleWebViewScreen(navController: NavHostController, articleUrl: String) {
                         }
 
                         webViewClient = object : WebViewClient() {
-                            override fun onPageFinished(view: WebView?, url: String?) {
-                                super.onPageFinished(view, url)
-                                // Inject CSS to hide the top 65px
-                                view?.evaluateJavascript(
-                                    """
+                            override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+                                // Inject JavaScript before the page loads
+                                view?.post {
+                                    view.evaluateJavascript(
+                                        """
                                     (function() {
-                                        var style = document.createElement('style');
-                                        style.innerHTML = 'body { position: relative; top: -120px; }';
-                                        document.head.appendChild(style);
-                                    })();
-                                    """.trimIndent(), null
-                                )
+                                    var style = document.createElement('style');
+                                    style.innerHTML = 'body { position: relative; top: -150px; }';
+                                     document.head.appendChild(style);
+                                      })();
+                                         """.trimIndent(), null
+                                    )
+                                }
+                                return super.shouldInterceptRequest(view, request)
                             }
                         }
 

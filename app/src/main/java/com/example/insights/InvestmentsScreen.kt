@@ -1,5 +1,7 @@
 package com.example.insights
 
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.material3.Scaffold
@@ -39,18 +41,20 @@ fun InvestmentsWebviewScreen(url: String) {
 
             // Set WebViewClient to inject JavaScript after page load
             webViewClient = object : WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    // Inject JavaScript to hide the top 50px
-                    view?.evaluateJavascript(
-                        """
-                        (function() {
-                            var style = document.createElement('style');
-                            style.innerHTML = 'body { margin-top: -65px !important; }';
-                            document.head.appendChild(style);
-                        })();
-                        """.trimIndent(), null
-                    )
+                override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+                    // Inject JavaScript before the page loads
+                    view?.post {
+                        view.evaluateJavascript(
+                            """
+                (function() {
+                    var style = document.createElement('style');
+                    style.innerHTML = 'body { position: relative; top: -65px; }';
+                    document.head.appendChild(style);
+                })();
+                """.trimIndent(), null
+                        )
+                    }
+                    return super.shouldInterceptRequest(view, request)
                 }
             }
             loadUrl(url) // Load the URL

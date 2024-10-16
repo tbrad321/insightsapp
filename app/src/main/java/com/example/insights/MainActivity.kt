@@ -1,67 +1,33 @@
 package com.example.insights
 
 import androidx.compose.material3.*
-import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
-import kotlinx.coroutines.launch
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
-import com.example.insights.R
 import com.example.insights.ui.theme.InsightsTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
-import androidx.compose.material3.carousel.rememberCarouselState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.runtime.remember
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -71,7 +37,6 @@ import com.example.insights.ui.theme.Teal100
 import com.example.insights.ui.theme.Teal600
 import com.example.insights.ui.theme.Teal800
 import com.example.insights.ui.theme.body2Strong
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -238,19 +203,18 @@ fun HomeTopAppBar(onSettingsClick: () -> Unit) {
 fun NavigationBar(navController: NavHostController, onInvestmentsClick: () -> Unit) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val items = listOf(
-        NavigationItem("Home", Icons.Filled.Home),
-        NavigationItem("Insights", Icons.Filled.Check),
-        NavigationItem("Investments", Icons.Filled.ShoppingCart)
+        NavigationItem("Home", R.drawable.ic_home_custom),        // Your custom drawable
+        NavigationItem("Insights", R.drawable.ic_insights_custom), // Your custom drawable
+        NavigationItem("Investments", R.drawable.ic_investments_custom) // Your custom drawable
     )
 
-    // Set the height to 86dp for the NavigationBar
     Box(modifier = Modifier.height(86.dp)) {
         NavigationBar(
             containerColor = Neutral0 // Background color for the navigation bar
         ) {
             items.forEach { item ->
                 NavigationBarItem(
-                    icon = { Icon(item.icon, contentDescription = item.title) },
+                    icon = { Icon(painter = painterResource(id = item.icon), contentDescription = item.title, modifier = Modifier.size(24.dp)) }, // Use painterResource here
                     label = { Text(item.title, style = body2Strong) },
                     selected = when (item.title) {
                         "Home" -> currentRoute == "Home"
@@ -291,7 +255,7 @@ fun NavigationBar(navController: NavHostController, onInvestmentsClick: () -> Un
     }
 }
 
-data class NavigationItem(val title: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
+data class NavigationItem(val title: String, val icon: Int)
 
 
 @Composable

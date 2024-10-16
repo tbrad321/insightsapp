@@ -29,10 +29,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.insights.ui.theme.Blue200
+import com.example.insights.ui.theme.Blue400
+import com.example.insights.ui.theme.Emerald200
+import com.example.insights.ui.theme.Emerald400
+import com.example.insights.ui.theme.Orange400
+import com.example.insights.ui.theme.Yellow200
+import com.example.insights.ui.theme.Yellow400
 
 
 // InsightsIconsRow.kt
@@ -60,10 +68,10 @@ fun LatestInsightsBox(navController: NavHostController) {
 @Composable
 fun InsightsIconsRow(navController: NavHostController) {
     val insightsList = listOf(
-        InsightItem("Market", Color.Blue),
-        InsightItem("Portfolio", Color.Green),
-        InsightItem("Retirement", Color.Yellow),
-        InsightItem("ETF", Color(0xFFFFA500))
+        InsightItem("Market", Blue400),
+        InsightItem("Portfolio", Emerald400),
+        InsightItem("Retirement", Yellow400),
+        InsightItem("ETF", Orange400)
     )
 
     Row(
@@ -108,7 +116,7 @@ fun InsightIconItem(item: InsightItem, navController: NavHostController, modifie
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                painter = painterResource(id = R.drawable.ic_insights_custom), // Use custom icon
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.fillMaxSize(0.5f)

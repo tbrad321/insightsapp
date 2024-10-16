@@ -36,6 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.Composable
+import com.example.insights.ui.theme.Neutral200
+import com.example.insights.ui.theme.Teal600
+import com.example.insights.ui.theme.Teal800
 
 
 data class CarouselItem(
@@ -88,7 +91,7 @@ fun HomeScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth() // Ensure the Box takes up the full width
-                .background(color = colorResource(R.color.purple_200)) // Apply background to the entire section
+                .background(color = Teal800) // Apply background to the entire section
         ) {
             LazyRow(
                 state = listState,
@@ -121,12 +124,12 @@ fun HomeScreen(navController: NavHostController) {
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(carouselItems.size) { index ->
-                val color = if (index == carouselState.value) Color.Blue else Color.Gray
+                val color = if (index == carouselState.value) Teal600 else Neutral200
                 Box(
                     modifier = Modifier
-                        .width(24.dp)
-                        .height(6.dp)
-                        .padding(horizontal = 2.dp)
+                        .width(38.dp)
+                        .height(4.dp)
+                        .padding(horizontal = 4.dp)
                         .background(color, RoundedCornerShape(50))
                 )
             }
